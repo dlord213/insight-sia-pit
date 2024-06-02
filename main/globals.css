@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  font-family: Work Sans, Arial, Helvetica, sans-serif;
+}
+
+ion-icon.active {
+  animation: like 0.5s 1;
+  fill: red;
+  stroke: none;
+}
+ion-icon {
+  fill: transparent;
+  stroke: black;
+  stroke-width: 30;
+  transition: all 0.5s;
+}
+
+@-webkit-keyframes like {
+  0% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
