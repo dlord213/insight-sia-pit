@@ -5,6 +5,7 @@ require './functions.php';
 $data = fetchMovieDetails($_GET['movie']);
 $movieID = fetchID($_GET['movie']);
 $reviewsData = fetchReviews($movieID);
+$movieAvailabilityOnProviders = fetchAvailableOnProviders($movieID);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   header('Location: ./movie.php?movie=' . $_POST['movie_name']);
@@ -25,9 +26,6 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
     $isFavorite = false;
   }
 }
-
-
-
 
 ?>
 
@@ -92,9 +90,26 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
         </div>
       </div>
       <div class="flex flex-col px-4 gap-2 basis-[70%]">
-        <?php
-        foreach ($reviewsData['results'] as $review) {
-          echo "
+        <div class="my-2 flex flex-col gap-2">
+          <h1 class="text-4xl text-slate-800 font-[700]">Available to watch on</h1>
+          <div class="flex flex-row flex-wrap gap-2">
+            <?php foreach ($movieAvailabilityOnProviders as $source) : ?>
+              <?php if ($source['type'] === 'sub') : ?>
+                <a href="<?php echo htmlspecialchars($source['web_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="text-center bg-slate-800 text-slate-100 p-4 rounded-lg">
+                  <h1><?php echo htmlspecialchars($source['name'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                </a>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <div class="flex flex-row justify-between items-center">
+          <h1 class="text-4xl text-slate-800 font-[700]">Reviews</h1>
+          <button class="cursor-pointer block px-4 py-2 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" id="reviews-button" onclick="handleCollapsibleContainer('reviews-container')">View</button>
+        </div>
+        <div class="hidden flex flex-col gap-2" id="reviews-container">
+          <?php
+          foreach ($reviewsData['results'] as $review) {
+            echo "
             <div class='flex flex-col p-2 rounded-lg gap-2 border border-gray-300'>
               <h1 class='text-slate-700'><b>" . $review['author'] . "</b> • " . $review['author_details']['rating'] . " / 10</h1>
               <div>
@@ -104,11 +119,15 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
               </div>
             </div>
           ";
-        }
-        ?>
+          }
+          ?>
+        </div>
       </div>
     </main>
     <script>
+      function handleCollapsibleContainer(id_container) {
+        document.getElementById(id_container).classList.toggle("hidden");
+      }
       document.addEventListener('DOMContentLoaded', () => {
         const heartIcon = document.querySelector('ion-icon[name="heart"]');
         heartIcon.addEventListener('click', () => {

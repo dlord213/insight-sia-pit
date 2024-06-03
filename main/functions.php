@@ -8,7 +8,7 @@ function fetchMovieDetails($title)
   $params = array(
     'apikey' => $OMDB_API_KEY,
     't' => $title,
-    'plot' => 'full'
+    'plot' => 'full'  // SHORT OR FULL
   );
 
   $ch = curl_init();
@@ -67,7 +67,6 @@ function fetchID($title)
     $data = json_decode($response, true);
     if (isset($data['results']) && !empty($data['results'])) {
       $firstResult = $data['results'][0];
-
       $movieID = $firstResult['id'];
       return $movieID;
     }
@@ -105,4 +104,38 @@ function fetchReviews($id)
     $data = json_decode($response, true);
     return $data;
   }
+}
+
+function fetchAvailableOnProviders($id)
+{
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, "https://api.watchmode.com/v1/title/movie-$id/sources/?apiKey=59La3scYTfpH5GmY51CL0PurX9ufwuh9ueXyCazh&regions=US");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $response = curl_exec($ch);
+  $err = curl_error($ch);
+
+  curl_close($ch);
+
+  if ($err) {
+    echo "cURL Error #:" . $err;
+  } else {
+    $json = json_decode($response, true);
+    return $json;
+  }
+}
+
+function removeDuplicates($array, $key)
+{
+  $tempArray = [];
+  $uniqueArray = [];
+
+  foreach ($array as $item) {
+    if (!in_array($item[$key], $tempArray)) {
+      $tempArray[] = $item[$key];
+      $uniqueArray[] = $item;
+    }
+  }
+
+  return $uniqueArray;
 }

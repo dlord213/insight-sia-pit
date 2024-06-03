@@ -54,7 +54,7 @@ WHERE user_id = " . $_SESSION['user_id'])->fetchAll(PDO::FETCH_ASSOC);
           <div class='flex flex-col basis-[80%] gap-2'>
             <h1 class='text-4xl font-[700] text-slate-700'>" . $data['Title'] . "</h1>
             <p class='font-[500] text-slate-500'>" . $data['Plot'] . "</p>
-            <a href='./movie.php?movie=" . $movie['title'] . "' class='cursor-pointer p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500'>View reviews</a>
+            <a href='./movie.php?movie=" . $movie['title'] . "' class='cursor-pointer max-w-[144px] text-center p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500'>View reviews</a>
           </div>
         </div>
           ";
