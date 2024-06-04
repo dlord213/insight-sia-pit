@@ -8,11 +8,6 @@ $reviewsData = fetchReviews($movieID);
 $recommendationsData = fetchRecommendations($movieID);
 $movieAvailabilityOnProviders = fetchAvailableOnProviders($movieID);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  header('Location: ./movie.php?movie=' . $_POST['movie_name']);
-  exit();
-}
-
 if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
 
   $connection = new PDO("pgsql:host=localhost;port=5432;dbname=insight", 'postgres', 'dlord213');
