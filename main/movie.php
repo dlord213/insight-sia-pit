@@ -18,8 +18,14 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
   $connection = new PDO("pgsql:host=localhost;port=5432;dbname=insight", 'postgres', 'dlord213');
   $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  $checkFavorite = $connection->query("SELECT * FROM user_favorites
-  WHERE user_id = " . $_SESSION['user_id'] . " AND movie_id = $movieID AND title = '" . $data['Title'] . "'")->fetch(PDO::FETCH_ASSOC);
+  $stmt = $connection->prepare("SELECT * FROM user_favorites WHERE user_id = :user_id AND movie_id = :movie_id AND title = :title");
+  $stmt->execute([
+    ':user_id' => $_SESSION['user_id'],
+    ':movie_id' => $movieID,
+    ':title' => $data['Title']
+  ]);
+
+  $checkFavorite = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($checkFavorite) {
     $isFavorite = true;
