@@ -106,6 +106,39 @@ function fetchReviews($id)
   }
 }
 
+function fetchRecommendations($id)
+{
+  $TMDB_API_KEY = '3570438566d34e0e6ea4f6ce2ee11a1a';
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.themoviedb.org/3/movie/$id/recommendations?language=en-US&page=1&api_key=$TMDB_API_KEY",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => [
+      "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNTcwNDM4NTY2ZDM0ZTBlNmVhNGY2Y2UyZWUxMWExYSIsInN1YiI6IjY0YWNmNmYxYjY4NmI5MDEwZTBkODZlMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0PhLJDk7NX4W-zPzr2jz8GWXt2WlVHWnQa08mJ_oIx4",
+      "accept: application/json"
+    ],
+  ]);
+
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+
+  curl_close($curl);
+
+  if ($err) {
+    echo "cURL Error #:" . $err;
+  } else {
+    $data = json_decode($response, true);
+    return $data;
+  }
+}
+
 function fetchAvailableOnProviders($id)
 {
   $ch = curl_init();
@@ -125,17 +158,37 @@ function fetchAvailableOnProviders($id)
   }
 }
 
-function removeDuplicates($array, $key)
+function fetchMovieLists($list)
 {
-  $tempArray = [];
-  $uniqueArray = [];
+  $TMDB_API_KEY = '3570438566d34e0e6ea4f6ce2ee11a1a';
 
-  foreach ($array as $item) {
-    if (!in_array($item[$key], $tempArray)) {
-      $tempArray[] = $item[$key];
-      $uniqueArray[] = $item;
-    }
+  // $LIST = now_playing | popular | top_rated | upcoming
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.themoviedb.org/3/movie/$list?language=en-US&page=1&api_key=$TMDB_API_KEY",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => [
+      "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNTcwNDM4NTY2ZDM0ZTBlNmVhNGY2Y2UyZWUxMWExYSIsInN1YiI6IjY0YWNmNmYxYjY4NmI5MDEwZTBkODZlMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0PhLJDk7NX4W-zPzr2jz8GWXt2WlVHWnQa08mJ_oIx4",
+      "accept: application/json"
+    ],
+  ]);
+
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+
+  curl_close($curl);
+
+  if ($err) {
+    echo "cURL Error #:" . $err;
+  } else {
+    $data = json_decode($response, true);
+    return $data;
   }
-
-  return $uniqueArray;
 }

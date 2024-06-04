@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+require './functions.php';
+
 $connection = new PDO("pgsql:host=localhost;port=5432;dbname=insight", 'postgres', 'dlord213');
 $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -19,6 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
+$currentlyShowingData = fetchMovieLists("now_playing");
+$popularMoviesData = fetchMovieLists("popular");
+$topRatedMoviesData = fetchMovieLists("top_rated");
+
 ?>
 
 <!DOCTYPE html>
@@ -30,33 +36,102 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <title>Insight</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./globals.css">
+  <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 </head>
 
-<body class="bg-slate-100 max-w-xl w-full mx-auto">
-  <main class="flex flex-col h-[100vh] gap-2 justify-center">
-    <div>
-      <h1 class="text-4xl font-[700] text-slate-800">Insight</h1>
-      <p class="text-slate-600">See what people think about your favorite movie!</p>
-    </div>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" class="flex flex-row gap-2">
-      <input type="hidden" name="form_type" value="search">
-      <input type="text" name="movie_name" placeholder="Search by title" class="mt-1 block p-4 text-slate-800 bg-white w-full border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800" required />
-      <input type="submit" value="Search" class="cursor-pointer mt-1 block p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" />
+<body class="bg-slate-100 max-w-7xl w-full mx-auto">
+
+  <!-- HEADER COMPONENT -->
+  <?php require './components/header_component.php' ?>
+  <!-- HEADER COMPONENT -->
+
+  <main class="flex flex-col min-h-[100vh] gap-2">
+
+    <!-- THEATRES CONTAINER -->
+    <div class="my-2 flex flex-col gap-2">
+      <h1 class="text-slate-700 font-[700] text-2xl">Currently showing on theatres</h1>
+      <div class="splide" id="theatres-container">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <?php foreach ($currentlyShowingData['results'] as $movie) : ?>
+              <li class="splide__slide flex flex-col px-2">
+                <a href="movie.php?movie=<?php echo $movie['title']; ?>">
+                  <img src="https://image.tmdb.org/t/p/original/<?php echo $movie['poster_path']; ?>" class="w-full rounded-lg">
+                  <h1 class="font-[700] text-slate-700 mt-2 text-lg"><?php echo $movie['title']; ?></h1>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
       </div>
-    </form>
-    <div class="flex flex-row gap-2">
-      <?php if (!isset($_SESSION['isLoggedIn'])) : ?>
-        <a class="cursor-pointer mt-1 w-full text-center block p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" href="./login.php">Login</a>
-        <a class="cursor-pointer mt-1 w-full text-center block p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" href="./register.php">Register</a>
-      <?php else : ?>
-        <a class="cursor-pointer mt-1 w-full text-center block p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" href="./favorites.php">View your favorites</a>
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" class="flex flex-row gap-2">
-          <input type="hidden" name="form_type" value="logout">
-          <input type="submit" value="Logout" class="cursor-pointer mt-1 w-full text-center block p-4 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" />
-        </form>
-      <?php endif; ?>
     </div>
+    <!-- THEATRES CONTAINER -->
+
+    <!-- TOP RATED CONTAINER -->
+    <div class="my-2 flex flex-col gap-2">
+      <h1 class="text-slate-700 font-[700] text-2xl">Top rated movies</h1>
+      <div class="splide" id="top-rated-container">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <?php foreach ($topRatedMoviesData['results'] as $movie) : ?>
+              <li class="splide__slide flex flex-col px-2">
+                <a href="movie.php?movie=<?php echo $movie['title']; ?>">
+                  <img src="https://image.tmdb.org/t/p/original/<?php echo $movie['poster_path']; ?>" class="w-full rounded-lg">
+                  <h1 class="font-[700] text-slate-700 mt-2 text-lg"><?php echo $movie['title']; ?></h1>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- TOP RATED CONTAINER -->
+
+    <!-- POPULAR CONTAINER -->
+    <div class="my-2 flex flex-col gap-2">
+      <h1 class="text-slate-700 font-[700] text-2xl">Popular movies</h1>
+      <div class="splide" id="popular-container">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <?php foreach ($popularMoviesData['results'] as $movie) : ?>
+              <li class="splide__slide flex flex-col px-2">
+                <a href="movie.php?movie=<?php echo $movie['title']; ?>">
+                  <img src="https://image.tmdb.org/t/p/original/<?php echo $movie['poster_path']; ?>" class="w-full rounded-lg">
+                  <h1 class="font-[700] text-slate-700 mt-2 text-lg"><?php echo $movie['title']; ?></h1>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- POPULAR CONTAINER -->
+
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new Splide('#theatres-container', {
+        perPage: 4,
+        pagination: false,
+        lazyLoad: true
+      }).mount();
+
+      new Splide('#popular-container', {
+        perPage: 4,
+        pagination: false,
+        lazyLoad: true
+      }).mount();
+
+      new Splide('#top-rated-container', {
+        perPage: 4,
+        pagination: false,
+        lazyLoad: true
+      }).mount();
+    });
+  </script>
+
 </body>
 
 </html>
