@@ -42,4 +42,19 @@
       </div>
     <?php endif; ?>
   </div>
+  <div class="flex flex-row gap-2">
+    <a href="./genres.php?genre_id=28&genre_name=Action" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Action</a>
+    <a href="./genres.php?genre_id=12&genre_name=Adventure" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Adventure</a>
+    <a href="./genres.php?genre_id=16&genre_name=Animation" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Animation</a>
+    <a href="./genres.php?genre_id=35&genre_name=Comedy" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Comedy</a>
+    <a href="./genres.php?genre_id=80&genre_name=Crime" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Crime</a>
+    <a href="./genres.php?genre_id=99&genre_name=Documentary" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Documentary</a>
+    <a href="./genres.php?genre_id=18&genre_name=Drama" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Drama</a>
+    <a href="./genres.php?genre_id=10751&genre_name=Family" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Family</a>
+    <a href="./genres.php?genre_id=27&genre_name=Horror" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Horror</a>
+    <a href="./genres.php?genre_id=10402&genre_name=Music" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Music</a>
+    <a href="./genres.php?genre_id=9648&genre_name=Mystery" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Mystery</a>
+    <a href="./genres.php?genre_id=10749&genre_name=Romance" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Romance</a>
+    <a href="./genres.php?genre_id=53&genre_name=Thriller" class="bg-slate-800 p-2 text-slate-100 rounded-lg hover:scale-[1.1] transition-all delay-0 duration-300 ease-in-out">Thriller</a>
+  </div>
 </header>
