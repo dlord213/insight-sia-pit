@@ -23,6 +23,7 @@ $genreName = $_GET['genre_name'];
 <body class="bg-slate-100 max-w-7xl w-full mx-auto">
   <?php require './components/header_component.php' ?>
   <main class="my-4 flex flex-col gap-2 relative">
+    <h1 class="text-4xl text-slate-800 font-[700]"><?php echo $genreName; ?></h1>
     <div class="splide" id="movie-container">
       <div class="splide__track">
         <ul class="splide__list flex flex-row">

@@ -120,13 +120,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="my-2 flex flex-col gap-2">
           <h1 class="text-4xl text-slate-800 font-[700]">Available to watch on</h1>
           <div class="flex flex-row flex-wrap gap-2">
-            <?php foreach ($movieAvailabilityOnProviders as $source) : ?>
-              <?php if ($source['type'] === 'sub') : ?>
-                <a href="<?php echo htmlspecialchars($source['web_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="text-center bg-slate-800 text-slate-100 p-4 rounded-lg">
-                  <h1><?php echo htmlspecialchars($source['name'], ENT_QUOTES, 'UTF-8'); ?></h1>
-                </a>
-              <?php endif; ?>
-            <?php endforeach; ?>
+            <?php if (!empty($movieAvailabilityOnProviders) && is_array($movieAvailabilityOnProviders)) : ?>
+              <?php foreach ($movieAvailabilityOnProviders as $source) : ?>
+                <?php if ($source['type'] === 'sub') : ?>
+                  <a href="<?php echo htmlspecialchars($source['web_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="text-center bg-slate-800 text-slate-100 p-4 rounded-lg">
+                    <h1><?php echo htmlspecialchars($source['name'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                  </a>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            <?php else : ?>
+              <p>No available providers.</p>
+            <?php endif; ?>
           </div>
         </div>
         <!-- STREAMING PLATFORMS CONTAINER -->
@@ -137,18 +141,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <div class="splide" id="recommendations-container">
             <div class="splide__track">
               <ul class="splide__list flex flex-row">
-                <?php foreach ($recommendationsData['results'] as $recommendation) : ?>
-                  <li class="splide__slide flex flex-col px-2">
-                    <a href="movie.php?movie=<?php echo $recommendation['title']; ?>">
-                      <img src="https://image.tmdb.org/t/p/original/<?php echo $recommendation['poster_path']; ?>" class="w-full rounded-lg">
-                      <h1 class="font-[700] text-slate-700 mt-2 text-lg"><?php echo $recommendation['title']; ?></h1>
-                    </a>
-                  </li>
-                <?php endforeach; ?>
+                <?php if (!empty($recommendationsData['results']) && is_array($recommendationsData['results'])) : ?>
+                  <?php foreach ($recommendationsData['results'] as $recommendation) : ?>
+                    <li class="splide__slide flex flex-col px-2">
+                      <a href="movie.php?movie=<?php echo htmlspecialchars($recommendation['title'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <img src="https://image.tmdb.org/t/p/original/<?php echo htmlspecialchars($recommendation['poster_path'], ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-lg">
+                        <h1 class="font-[700] text-slate-700 mt-2 text-lg"><?php echo htmlspecialchars($recommendation['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
+                <?php else : ?>
+                  <p>No recommendations available.</p>
+                <?php endif; ?>
               </ul>
             </div>
           </div>
         </div>
+
         <!-- RECOMMENDATIONS CONTAINER -->
 
         <!-- REVIEWS PLATFORMS CONTAINER -->
@@ -157,17 +166,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <button class="cursor-pointer block px-4 py-2 text-slate-800 hover:bg-slate-800 hover:text-slate-50 transition-all delay-0 duration-250 ease-in-out bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500" id="reviews-button" onclick="handleCollapsibleContainer('reviews-container')">View</button>
         </div>
         <div class="hidden flex flex-col gap-2" id="reviews-container">
-          <?php foreach ($reviewsData['results'] as $review) : ?>
-            <div class='flex flex-col p-2 rounded-lg gap-2 border border-gray-300'>
-              <h1 class='text-slate-700'><b><?php echo $review['author']; ?></b> • <?php echo $review['author_details']['rating']; ?> / 10</h1>
-              <div>
-                <a href="<?php echo $review['url']; ?>" target='_blank' rel='noopener noreferrer'>
-                  <p class='text-slate-600'><?php echo $review['content']; ?></p>
-                </a>
+          <?php if (!empty($reviewsData['results']) && is_array($reviewsData['results'])) : ?>
+            <?php foreach ($reviewsData['results'] as $review) : ?>
+              <div class='flex flex-col p-2 rounded-lg gap-2 border border-gray-300'>
+                <h1 class='text-slate-700'><b><?php echo htmlspecialchars($review['author'], ENT_QUOTES, 'UTF-8'); ?></b> • <?php echo htmlspecialchars($review['author_details']['rating'], ENT_QUOTES, 'UTF-8'); ?> / 10</h1>
+                <div>
+                  <a href="<?php echo htmlspecialchars($review['url'], ENT_QUOTES, 'UTF-8'); ?>" target='_blank' rel='noopener noreferrer'>
+                    <p class='text-slate-600'><?php echo htmlspecialchars($review['content'], ENT_QUOTES, 'UTF-8'); ?></p>
+                  </a>
+                </div>
               </div>
-            </div>
-          <?php endforeach; ?>
+            <?php endforeach; ?>
+          <?php else : ?>
+            <p>No reviews available.</p>
+          <?php endif; ?>
         </div>
+
         <!-- REVIEWS PLATFORMS CONTAINER -->
 
       </div>
